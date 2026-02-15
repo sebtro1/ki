@@ -29,3 +29,6 @@ import '@awesome.me/webawesome/dist/components/button/button.js';
 // <wa-input>
 import '@awesome.me/webawesome/dist/components/input/input.js';
 
+// Pattern Lib
+
+import '@patternfly/elements/pf-button/pf-button.js';

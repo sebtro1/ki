@@ -96,9 +96,22 @@
       wabuttons.forEach(btn => {
         btn.addEventListener('click', (e) => {
           console.log(`Button wurde geklickt!`);
-          alert(`Klick`);
         });
       });
+    </script>
+
+    <h1>Patternfly Component</h1>
+
+    <div>
+      <pf-button>Patternfly</pf-button>
+    </div>
+
+    <script type="module">
+      import '@patternfly/elements/pf-button/pf-button.js';
+      document.querySelector('pf-button')
+        .addEventListener('click', function () {
+          console.log('clicked!');
+        });
     </script>
 
 </body>
