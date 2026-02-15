@@ -1387,7 +1387,11 @@ img {
       }
     `}constructor(){super(),this.username="Gast",this.role="Besucher"}_handleContact(){this.dispatchEvent(new CustomEvent("contact-user",{detail:{id:this.userId,name:this.username},bubbles:!0,composed:!0}))}render(){return k`
       <pf-card>
-        <h3 slot="header">Mitarbeiter-Profil</h3>
+      <!-- <h3 slot="header">Mitarbeiter-Profil</h3> -->
+
+      <slot name="header" slot="header">
+        <h3>Standard Mitarbeiter-Profil</h3>
+      </slot>
 
         <div class="user-info">
           <img 

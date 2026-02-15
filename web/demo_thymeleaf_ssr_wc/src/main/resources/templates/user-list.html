@@ -14,6 +14,12 @@
         <th:block th:each="user : ${users}">
 
             <my-user-card th:username="${user.name}" th:role="${user.jobTitle}" th:userId="${user.id}">
+                <span slot="header" th:if="${user.isAdmin}">
+                    🛡️ <strong>ADMINISTRATOR</strong>
+                </span>
+                <span slot="header" th:unless="${user.isAdmin}">
+                    👤 <strong>Benutzer</strong>
+                </span>
             </my-user-card>
 
         </th:block>

@@ -16,15 +16,17 @@ public class WebController {
     public String showUsers(Model model) {
         // Simuierte DB-Daten
         List<User> userList = List.of(
-                new User("101", "Anna Müller", "DevOps Engineer"),
-                new User("102", "Max Mustermann", "Product Owner"));
+                new User("101", "Anna Müller", "DevOps Engineer", true),
+                new User("102", "Max Mustermann", "Product Owner", false));
 
         model.addAttribute("users", userList);
         return "user-list"; // rendert user-list.html
+
+    
     }
 
 }
 
 // User Record
-record User(String id, String name, String jobTitle) {
+record User(String id, String name, String jobTitle, boolean isAdmin) {
 }

@@ -7,17 +7,17 @@ import '@patternfly/elements/pf-avatar/pf-avatar.js'; // Falls vorhanden, sonst 
 
 export class MyUserCard extends LitElement {
 
-    // Eigenschaften deiner EIGENEN Komponente
-    static get properties() {
-        return {
-            username: { type: String },
-            role: { type: String },
-            userId: { type: String }
-        };
-    }
+  // Eigenschaften deiner EIGENEN Komponente
+  static get properties() {
+    return {
+      username: { type: String },
+      role: { type: String },
+      userId: { type: String }
+    };
+  }
 
-    static get styles() {
-        return css`
+  static get styles() {
+    return css`
       :host {
         display: block;
         max-width: 300px;
@@ -38,28 +38,32 @@ export class MyUserCard extends LitElement {
         color: var(--pf-global--primary-color--100, #0066cc); /* Nutzung von PF Variablen */
       }
     `;
-    }
+  }
 
-    constructor() {
-        super();
-        this.username = 'Gast';
-        this.role = 'Besucher';
-    }
+  constructor() {
+    super();
+    this.username = 'Gast';
+    this.role = 'Besucher';
+  }
 
-    _handleContact() {
-        // Wir feuern ein eigenes, "semantisches" Event nach außen
-        this.dispatchEvent(new CustomEvent('contact-user', {
-            detail: { id: this.userId, name: this.username },
-            bubbles: true,
-            composed: true
-        }));
-    }
+  _handleContact() {
+    // Wir feuern ein eigenes, "semantisches" Event nach außen
+    this.dispatchEvent(new CustomEvent('contact-user', {
+      detail: { id: this.userId, name: this.username },
+      bubbles: true,
+      composed: true
+    }));
+  }
 
-    render() {
-        // Hier passiert die "Verschachtelung" (Composition)
-        return html`
+  render() {
+    // Hier passiert die "Verschachtelung" (Composition)
+    return html`
       <pf-card>
-        <h3 slot="header">Mitarbeiter-Profil</h3>
+      <!-- <h3 slot="header">Mitarbeiter-Profil</h3> -->
+
+      <slot name="header" slot="header">
+        <h3>Standard Mitarbeiter-Profil</h3>
+      </slot>
 
         <div class="user-info">
           <img 
@@ -80,7 +84,7 @@ export class MyUserCard extends LitElement {
         </div>
       </pf-card>
     `;
-    }
+  }
 }
 
 customElements.define('my-user-card', MyUserCard);
