@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Hallo Welt</title>
-    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <!-- https://unpkg.com/htmx.org@2.0.4-->
+    <script src="/js/htmx.min.js"></script>
 </head>
 
 <body>
     <div id="greeting" th:text="${message}">Hallo Welt</div>
+    <input type="text" value="0" />
     <button hx-get="/web/greeting/update" hx-target="#greeting" hx-swap="innerHTML">Klick</button>
 </body>
 

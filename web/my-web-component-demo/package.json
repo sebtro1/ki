@@ -1,0 +1,18 @@
+{
+  "name": "my-web-component-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@shoelace-style/shoelace": "^2.20.1",
+    "lit": "^3.3.1"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  }
+}

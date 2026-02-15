@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>my-web-component-demo</title>
+  <link rel="stylesheet" href="./src/index.css" />
+  <script type="module" src="/src/my-element.js"></script>
+  <script type="module" src="./src/SimpleButton.js"></script>
+</head>
+
+<body>
+  <my-element>
+    <h1>Vite + Lit</h1> <!-- slot -->
+  </my-element>
+
+  <h1>Meine Web Components Demo</h1>
+
+  <simple-button label="Speichern"></simple-button>
+
+  <simple-button label="Abbrechen" variant="secondary"></simple-button>
+
+  <script>
+    // Beispiel: Wie man ohne Framework auf Events hört
+    const buttons = document.querySelectorAll('simple-button');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('button-clicked', (e) => {
+        console.log(`Button wurde geklickt! Anzahl: ${e.detail.count}`);
+        alert(`Klickzähler: ${e.detail.count}`);
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>
