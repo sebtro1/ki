@@ -114,6 +114,29 @@
         });
     </script>
 
+    <h1>Patternfly Custom Card</h1>
+
+    <div style="display: flex; gap: 20px;">
+
+      <my-user-card username="Anna Müller" role="IT Administrator" userId="101">
+      </my-user-card>
+      asdasdasd
+      <my-user-card username="Max Mustermann" role="Entwickler" userId="102">
+      </my-user-card>
+
+    </div>
+
+    <script>
+      // Event Listener für dein EIGENES Event
+      document.body.addEventListener('contact-user', (e) => {
+        console.log(`Kontaktiere User: ${e.detail.name} (ID: ${e.detail.id})`);
+        alert(`E-Mail Programm öffnen für: ${e.detail.name}`);
+      });
+    </script>
+
+
+    <h1>ENDE</h1>
+
 </body>
 
 </html>
