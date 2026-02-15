@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hallo Welt</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+
+<body>
+    <div id="greeting" th:text="${message}">Hallo Welt</div>
+    <button hx-get="/web/greeting/update" hx-target="#greeting" hx-swap="innerHTML">Klick</button>
+</body>
+
+</html>
