@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Mitarbeiter Liste</title>
+    <script type="module" th:src="@{/wc/assets/main.js}"></script>
+</head>
+
+<body>
+
+    <h1>Unsere Mitarbeiter (Server-Side Rendered)</h1>
+
+    <div class="card-grid">
+        <th:block th:each="user : ${users}">
+
+            <my-user-card th:username="${user.name}" th:role="${user.jobTitle}" th:userId="${user.id}">
+            </my-user-card>
+
+        </th:block>
+    </div>
+
+</body>
+
+</html>
