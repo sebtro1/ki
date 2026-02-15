@@ -10,8 +10,12 @@
 
 <body>
     <div id="greeting" th:text="${message}">Hallo Welt</div>
-    <input type="text" value="0" />
+
     <button hx-get="/web/greeting/update" hx-target="#greeting" hx-swap="innerHTML">Klick</button>
+
+
+
+
 </body>
 
 </html>
