@@ -4,35 +4,172 @@
 <head>
     <title>Thymeleaf + htmx Todo</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --success-color: #22c55e;
+            --success-hover: #16a34a;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-radius: 0.5rem;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .todo-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: transparent;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+
+        .todo-text {
+            font-size: 1.1rem;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-toggle {
+            background-color: var(--success-color);
+        }
+
+        .btn-toggle:hover {
+            background-color: var(--success-hover);
+        }
+
+        .btn-toggle.is-completed {
+            background-color: #9ca3af;
+        }
+
+        .btn-toggle.is-completed:hover {
+            background-color: #6b7280;
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-hover);
+        }
+    </style>
 </head>
 
-<body class="container mt-5">
-    <h1>Todo List</h1>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
 
-    <div class="mb-3">
-        <form hx-post="/todos" hx-target="#todo-list" hx-swap="innerHTML" class="d-flex">
-            <input type="text" name="description" class="form-control me-2" placeholder="Add a new todo" required>
-            <button type="submit" class="btn btn-primary">Add</button>
+        <form hx-post="/todos" hx-target="#todo-list" hx-swap="innerHTML" class="todo-form">
+            <input type="text" name="description" placeholder="Add a new todo" required>
+            <button type="submit" class="btn-primary">Add</button>
         </form>
-    </div>
 
-    <ul id="todo-list" class="list-group" th:fragment="todoList">
-        <li class="list-group-item d-flex justify-content-between align-items-center" th:each="todo : ${todos}">
-            <span th:text="${todo.description}" th:style="${todo.completed} ? 'text-decoration: line-through' : ''">
-            </span>
-            <div>
-                <button class="btn btn-sm" th:classappend="${todo.completed} ? 'btn-secondary' : 'btn-success'"
-                    th:text="${todo.completed} ? 'Undo' : 'Done'" th:hx-put="@{/todos/{id}/toggle(id=${todo.id})}"
-                    hx-target="#todo-list" hx-swap="innerHTML">
-                </button>
-                <button class="btn btn-danger btn-sm" th:hx-delete="@{/todos/{id}(id=${todo.id})}"
-                    hx-target="#todo-list" hx-swap="innerHTML">
-                    X
-                </button>
-            </div>
-        </li>
-    </ul>
+        <ul id="todo-list" class="todo-list" th:fragment="todoList">
+            <li class="todo-item" th:each="todo : ${todos}">
+                <span class="todo-text" th:text="${todo.description}" th:classappend="${todo.completed} ? 'completed'">
+                </span>
+                <div class="actions">
+                    <button class="btn-sm btn-toggle" th:classappend="${todo.completed} ? 'is-completed'"
+                        th:text="${todo.completed} ? 'Undo' : 'Done'" th:hx-put="@{/todos/{id}/toggle(id=${todo.id})}"
+                        hx-target="#todo-list" hx-swap="innerHTML">
+                    </button>
+                    <button class="btn-sm btn-delete" th:hx-delete="@{/todos/{id}(id=${todo.id})}"
+                        hx-target="#todo-list" hx-swap="innerHTML">
+                        X
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </div>
 
     <script>
         document.body.addEventListener('htmx:afterSwap', function (evt) {
