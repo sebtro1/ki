@@ -11,13 +11,13 @@ public class WebController {
 
     private int counter = 0;
 
-    @GetMapping("/web/hello")
+    @GetMapping("/hello")
     public String showHello(Model model) {
         model.addAttribute("message", "Hallo Welt");
         return "hello";
     }
 
-    @GetMapping("/web/greeting/update")
+    @GetMapping("/greeting/update")
     @ResponseBody
     public String updateGreeting() {
         counter++;

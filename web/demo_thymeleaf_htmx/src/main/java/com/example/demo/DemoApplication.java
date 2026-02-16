@@ -17,9 +17,4 @@ public class DemoApplication {
 	public String startseite() {
 		return "Willkommen auf der Startseite!";
 	}
-
-	@GetMapping("/hallo")
-	public String sagHallo() {
-		return "Hallo! Deine Spring Boot App läuft!";
-	}
 }
