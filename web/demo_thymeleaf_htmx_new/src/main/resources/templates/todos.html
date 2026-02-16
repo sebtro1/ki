@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Thymeleaf + htmx Todo</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen py-6 flex flex-col justify-center sm:py-12">
+    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+        </div>
+        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="max-w-md mx-auto">
+                <div class="divide-y divide-gray-200">
+                    <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                        <h1 class="text-3xl font-extrabold text-center mb-8">Todo List</h1>
+
+                        <form hx-post="/todos" hx-target="#todo-list" hx-swap="innerHTML" class="flex gap-2 mb-6">
+                            <input type="text" name="description"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="Add a new todo" required aria-label="Todo description">
+                            <button type="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Add
+                            </button>
+                        </form>
+
+                        <ul id="todo-list" class="space-y-3" th:fragment="todoList">
+                            <li class="flex items-center justify-between bg-gray-50 p-3 rounded shadow-sm"
+                                th:each="todo : ${todos}">
+                                <span th:text="${todo.description}"
+                                    th:class="${todo.completed} ? 'line-through text-gray-400' : 'text-gray-800'">
+                                </span>
+                                <div class="flex gap-2">
+                                    <button class="text-sm font-medium"
+                                        th:classappend="${todo.completed} ? 'text-gray-500 hover:text-gray-700' : 'text-blue-500 hover:text-blue-700'"
+                                        th:text="${todo.completed} ? 'Undo' : 'Done'"
+                                        th:hx-put="@{/todos/{id}/toggle(id=${todo.id})}" hx-target="#todo-list"
+                                        hx-swap="innerHTML">
+                                    </button>
+                                    <button class="text-red-500 hover:text-red-700 text-sm font-medium ml-2"
+                                        th:hx-delete="@{/todos/{id}(id=${todo.id})}" hx-target="#todo-list"
+                                        hx-swap="innerHTML">
+                                        X
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (evt) {
+            const form = document.querySelector('form');
+            if (form) form.reset();
+        });
+    </script>
+</body>
+
+</html>
