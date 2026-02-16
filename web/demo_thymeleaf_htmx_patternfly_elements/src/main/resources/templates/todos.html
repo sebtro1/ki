@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Thymeleaf + htmx Todo</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- JSPM Generator Import Map -->
+    <script type="importmap">
+    {
+        "imports": {
+            "@patternfly/elements/pf-button/pf-button.js": "https://ga.jspm.io/npm:@patternfly/elements@2.4.0/pf-button/pf-button.js",
+            "@patternfly/elements/pf-card/pf-card.js": "https://ga.jspm.io/npm:@patternfly/elements@2.4.0/pf-card/pf-card.js",
+            "@patternfly/elements/pf-icon/pf-icon.js": "https://ga.jspm.io/npm:@patternfly/elements@2.4.0/pf-icon/pf-icon.js"
+        },
+        "scopes": {
+            "https://ga.jspm.io/": {
+                "tslib": "https://ga.jspm.io/npm:tslib@2.6.2/tslib.es6.js",
+                "lit": "https://ga.jspm.io/npm:lit@3.1.2/index.js",
+                "lit/decorators/custom-element.js": "https://ga.jspm.io/npm:lit@3.1.2/decorators/custom-element.js",
+                "lit/decorators/property.js": "https://ga.jspm.io/npm:lit@3.1.2/decorators/property.js",
+                "lit/decorators/query.js": "https://ga.jspm.io/npm:lit@3.1.2/decorators/query.js",
+                "lit/decorators/state.js": "https://ga.jspm.io/npm:lit@3.1.2/decorators/state.js",
+                "lit/directives/class-map.js": "https://ga.jspm.io/npm:lit@3.1.2/directives/class-map.js",
+                "lit/directives/if-defined.js": "https://ga.jspm.io/npm:lit@3.1.2/directives/if-defined.js",
+                "lit/directives/style-map.js": "https://ga.jspm.io/npm:lit@3.1.2/directives/style-map.js",
+                "lit/directives/unsafe-html.js": "https://ga.jspm.io/npm:lit@3.1.2/directives/unsafe-html.js",
+                "@patternfly/pfe-core": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/core.js",
+                "@patternfly/pfe-core/controllers/logger.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/controllers/logger.js",
+                "@patternfly/pfe-core/controllers/perf-controller.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/controllers/perf-controller.js",
+                "@patternfly/pfe-core/controllers/slot-controller.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/controllers/slot-controller.js",
+                "@patternfly/pfe-core/decorators/bound.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/decorators/bound.js",
+                "@patternfly/pfe-core/decorators/cascades.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/decorators/cascades.js",
+                "@patternfly/pfe-core/decorators/observed.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/decorators/observed.js",
+                "@patternfly/pfe-core/decorators/trace.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/decorators/trace.js",
+                "@patternfly/pfe-core/functions/randomId.js": "https://ga.jspm.io/npm:@patternfly/pfe-core@2.4.0/functions/randomId.js"
+            }
+        }
+    }
+    </script>
+    <script type="module">
+        import '@patternfly/elements/pf-button/pf-button.js';
+        import '@patternfly/elements/pf-card/pf-card.js';
+        // import '@patternfly/elements/pf-icon/pf-icon.js'; 
+    </script>
+
+    <style>
+        body {
+            font-family: RedHatText, "Red Hat Text", "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans JP", "Noto Sans KR", "Noto Sans Malayalam", "Noto Sans SC", "Noto Sans TC", "Noto Sans Thai", Helvetica, Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        pf-card {
+            width: 100%;
+            max-width: 600px;
+            --pf-c-card--BackgroundColor: #ffffff;
+        }
+
+        .todo-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            /* Approximate PFE look */
+            font-size: 16px;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #6a6e73;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <pf-card>
+        <h1 slot="header">Todo List</h1>
+
+        <form hx-post="/todos" hx-target="#todo-list" hx-swap="innerHTML" class="todo-form">
+            <input type="text" name="description" placeholder="Add a new todo" required>
+            <pf-button type="submit" variant="primary">Add</pf-button>
+        </form>
+
+        <ul id="todo-list" class="todo-list" th:fragment="todoList">
+            <li class="todo-item" th:each="todo : ${todos}">
+                <span th:text="${todo.description}" th:classappend="${todo.completed} ? 'completed'">
+                </span>
+                <div class="actions">
+                    <pf-button size="small" th:variant="${todo.completed} ? 'secondary' : 'primary'"
+                        th:text="${todo.completed} ? 'Undo' : 'Done'" th:hx-put="@{/todos/{id}/toggle(id=${todo.id})}"
+                        hx-target="#todo-list" hx-swap="innerHTML">
+                    </pf-button>
+                    <pf-button size="small" variant="danger" th:hx-delete="@{/todos/{id}(id=${todo.id})}"
+                        hx-target="#todo-list" hx-swap="innerHTML">
+                        X
+                    </pf-button>
+                </div>
+            </li>
+        </ul>
+    </pf-card>
+
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (evt) {
+            const form = document.querySelector('form');
+            if (form) form.reset();
+        });
+    </script>
+</body>
+
+</html>
