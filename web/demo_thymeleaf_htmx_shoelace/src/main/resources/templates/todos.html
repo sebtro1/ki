@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Thymeleaf + htmx Todo</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css" />
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
+    <style>
+        body {
+            font-family: var(--sl-font-sans);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--sl-color-neutral-50);
+        }
+
+        h1 {
+            color: var(--sl-color-primary-600);
+            text-align: center;
+        }
+
+        .todo-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        .todo-input {
+            flex-grow: 1;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            border-radius: var(--sl-border-radius-medium);
+            box-shadow: var(--sl-shadow-x-small);
+            border: 1px solid var(--sl-color-neutral-200);
+        }
+
+        .todo-item.completed span {
+            text-decoration: line-through;
+            color: var(--sl-color-neutral-400);
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Todo List</h1>
+
+    <form hx-post="/todos" hx-target="#todo-list" hx-swap="innerHTML" class="todo-form">
+        <sl-input name="description" placeholder="Add a new todo" required class="todo-input"></sl-input>
+        <sl-button type="submit" variant="primary">Add</sl-button>
+    </form>
+
+    <ul id="todo-list" class="todo-list" th:fragment="todoList">
+        <li class="todo-item" th:each="todo : ${todos}" th:classappend="${todo.completed} ? 'completed'">
+            <span th:text="${todo.description}"></span>
+            <div class="actions">
+                <sl-button size="small" th:variant="${todo.completed} ? 'neutral' : 'success'"
+                    th:text="${todo.completed} ? 'Undo' : 'Done'" th:hx-put="@{/todos/{id}/toggle(id=${todo.id})}"
+                    hx-target="#todo-list" hx-swap="innerHTML">
+                </sl-button>
+                <sl-button size="small" variant="danger" th:hx-delete="@{/todos/{id}(id=${todo.id})}"
+                    hx-target="#todo-list" hx-swap="innerHTML">
+                    X
+                </sl-button>
+            </div>
+        </li>
+    </ul>
+
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (evt) {
+            const form = document.querySelector('form');
+            // Reset sl-input manually as native form reset might not clear shadow DOM input immediately or effectively if not bound
+            const input = form.querySelector('sl-input');
+            if (input) input.value = '';
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hallo Welt</title>
+    <!-- https://unpkg.com/htmx.org@2.0.4-->
+    <script src="/js/htmx.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css" />
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
+    <style>
+        body {
+            font-family: var(--sl-font-sans);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--sl-color-neutral-50);
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--sl-border-radius-medium);
+            box-shadow: var(--sl-shadow-medium);
+            text-align: center;
+        }
+
+        #greeting {
+            font-size: var(--sl-font-size-2x-large);
+            font-weight: var(--sl-font-weight-bold);
+            color: var(--sl-color-primary-600);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div id="greeting" th:text="${message}">Hallo Welt</div>
+        <sl-button variant="primary" hx-get="/greeting/update" hx-target="#greeting"
+            hx-swap="innerHTML">Klick</sl-button>
+    </div>
+</body>
+
+</html>
