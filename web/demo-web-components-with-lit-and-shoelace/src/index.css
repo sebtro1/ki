@@ -1,9 +1,0 @@
-body {
-  margin: 0;
-  background-color: var(--sl-color-neutral-50);
-  color: var(--sl-color-neutral-900);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
