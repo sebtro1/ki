@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
-import './components/todo-input.js';
-import './components/todo-item.js';
+import './todo-input.js';
+import './todo-item.js';
 
 export class TodoApp extends LitElement {
     static properties = {
